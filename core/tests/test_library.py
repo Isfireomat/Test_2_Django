@@ -1,11 +1,9 @@
 from typing import Dict, Union, List
-from django.urls import reverse
+from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 import pytest
-from library.models import Book
 from conftest import client, books
-from datetime import datetime
 
 @pytest.mark.django_db
 def test_library_books(client: APIClient, 
@@ -30,12 +28,12 @@ def test_library_books(client: APIClient,
                                         },
                                         format='json')
     assert response.status_code == 200
-    date_1 = datetime.strptime(start_date, "%Y-%m-%d").date()
-    date_2 = datetime.strptime(end_date, "%Y-%m-%d").date()
+    date_1: datetime = datetime.strptime(start_date, "%Y-%m-%d").date()
+    date_2: datetime = datetime.strptime(end_date, "%Y-%m-%d").date()
     print(response.data)
     for book in response.data['books']:
         assert date_1 <= book['published_date'] and book['published_date'] <= date_2
-    new_book = books[0]
+    new_book: Dict[str, Union[str, int]] = books[0]
     new_book['count_pages'] = 500
     response: Response = client.put('/api/books/1/', 
                                     new_book,

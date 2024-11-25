@@ -26,11 +26,12 @@ class Command(BaseCommand):
         try:
             match switcher:
                 case 'up':
-                    email: str = str(os.getenv('EMAIL') if not options.get('time') else options['email'])
+                    email: str = str(os.getenv('EMAIL') if not options.get('email') else options['email'])
+                    time: int = int(os.getenv('MINUTES', 1) if not options.get('time') else options['time'])
                     serializer: EmailSerializer = EmailSerializer(data={'email': email})
                     if not serializer.is_valid():
                         raise CommandError('Данные не валидны')
-                    time = int(os.getenv('MINUTES', 1) if not options.get('time') else options['time'])
+                    time: int = int(os.getenv('MINUTES', 1) if not options.get('time') else options['time'])
                     if time<0: time = 1
                     schedule, _ = IntervalSchedule.objects.update_or_create(
                         every=time,
@@ -48,7 +49,6 @@ class Command(BaseCommand):
                         self.stdout.write(self.style.SUCCESS('Задача обновлена.'))
                 case 'down': 
                     PeriodicTask.objects.filter(name='Отправка писем').delete()
-                    
                     self.stdout.write(self.style.SUCCESS('Задача успешно прекращена.'))
         except Exception as e:
             raise CommandError(f'Ошибка выполнения команды: {e}')
