@@ -14,7 +14,8 @@ class Command(BaseCommand):
                                 down - down task')
         parser.add_argument('--email', 
                             type=str,
-                            help='input email')
+                            help='input email',
+                            required=False)
         parser.add_argument('--time', 
                             type=int,
                             help='input time',
@@ -25,22 +26,24 @@ class Command(BaseCommand):
         try:
             match switcher:
                 case 'up':
-                    email: str = options['email']
+                    email: str = str(os.getenv('EMAIL') if not options.get('time') else options['email'])
                     serializer: EmailSerializer = EmailSerializer(data={'email': email})
                     if not serializer.is_valid():
                         raise CommandError('Данные не валидны')
+                    time = int(os.getenv('MINUTES', 1) if not options.get('time') else options['time'])
+                    if time<0: time = 1
                     schedule, _ = IntervalSchedule.objects.update_or_create(
-                        every=int(os.getenv('MINUTES', 1) if not options.get('time') else options['time']),
+                        every=time,
                         period=IntervalSchedule.MINUTES
                     )
-                    task, created = PeriodicTask.objects.update_or_create(
+                    _ , created = PeriodicTask.objects.update_or_create(
                         interval=schedule,
                         name="Отправка писем",
                         task="send_email",
                         kwargs=json.dumps({'email':email})
                     )        
                     if created:
-                        self.stdout.write(self.style.SUCCESS(f'Задача успешно создана на {int(os.getenv('MINUTES', 1) if not options.get('time') else options['time'])} минут.'))
+                        self.stdout.write(self.style.SUCCESS(f'Задача успешно создана на {time} минут.'))
                     else:
                         self.stdout.write(self.style.SUCCESS('Задача обновлена.'))
                 case 'down': 

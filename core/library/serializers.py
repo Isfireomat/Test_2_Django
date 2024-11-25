@@ -4,7 +4,7 @@ from .models import Book
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'genre', 'count_pages', 'epub', 'published_date']
+        fields = '__all__'
 
     def create(self, validated_data):
         epub = validated_data.get('epub')

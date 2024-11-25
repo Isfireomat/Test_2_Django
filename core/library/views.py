@@ -41,16 +41,6 @@ class BookList(APIView):
         start_date = serializer.validated_data['start_date']
         end_date = serializer.validated_data['end_date']
         try:
-            # books = Book.objects.raw(f'''SELECT 
-            #                                 title, 
-            #                                 author, 
-            #                                 genre, 
-            #                                 count_pages, 
-            #                                 published_date, 
-            #                                 RANK() OVER(ORDER BY count_pages DESC) AS rank 
-            #                             FROM 
-            #                                 core_book 
-            #                             WHERE published_date BETWEN {start_date} AND {end_date}''').values()
             books = Book.objects.filter(published_date__range=[start_date, end_date]) \
                                         .annotate(rank=Window(
                                             expression=Rank(), 
