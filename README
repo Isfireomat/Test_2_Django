@@ -1,10 +1,29 @@
+.env файлы существует для вашего удобства, внесите недостающие данные.
+
 Поднятие контейнера:
   docker-compose up --build 
 Миграция в БД:
   docker-compose exec app poetry run python migrate
+Тестирование API:
+  docker-compose exec app poetry run pytest
 Команда для поднятия отправки писем:
   docker-compose exec app poetry run python manage.py repeat_send_email up --email dfdfgfgf666@gmail.com --time 10
 Команда для остановки отправки писем:
   docker-compose exec app poetry run python manage.py repeat_send_email down
 Команда дял остановки контейнера:
   docker-compose down
+
+Документация:
+  http://localhost:8000/api/schema/swagger-ui/
+
+Реализация запроса в виде SQL: 
+  SELECT 
+    title, 
+    author, 
+    genre, 
+    count_pages, 
+    published_date, 
+    RANK() OVER(ORDER BY count_pages DESC) AS rank 
+  FROM 
+    book 
+  WHERE published_date BETWEN "2013-11-25" AND "2019-11-25"

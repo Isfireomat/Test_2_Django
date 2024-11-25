@@ -13,13 +13,8 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
-      DB_NAME: ${DB_NAME}
       REDIS_HOST: cashe
       REDIS_PORT: 6379
-      SECRET_KEY: ${SECRET_KEY}  
-      MINUTES: ${MINUTES}
     volumes: 
       - ./core:/app
     
