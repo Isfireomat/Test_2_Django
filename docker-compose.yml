@@ -19,6 +19,7 @@ services:
       REDIS_HOST: cashe
       REDIS_PORT: 6379
       SECRET_KEY: ${SECRET_KEY}  
+      MINUTES: ${MINUTES}
     volumes: 
       - ./core:/app
     
@@ -33,7 +34,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - pgdata_test2:/var/lib/postgresql/data  
+      - pgdata:/var/lib/postgresql/data  
   
   cashe:
     image: redis:latest
@@ -45,5 +46,5 @@ services:
      - redis_data_test2:/data
 
 volumes:
-  pgdata_test2:
+  pgdata:
   redis_data_test2:

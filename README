@@ -1,0 +1,10 @@
+Поднятие контейнера:
+  docker-compose up --build 
+Миграция в БД:
+  docker-compose exec app poetry run python migrate
+Команда для поднятия отправки писем:
+  docker-compose exec app poetry run python manage.py repeat_send_email up --email dfdfgfgf666@gmail.com --time 10
+Команда для остановки отправки писем:
+  docker-compose exec app poetry run python manage.py repeat_send_email down
+Команда дял остановки контейнера:
+  docker-compose down

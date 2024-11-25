@@ -26,6 +26,17 @@ SECRET_KEY = 'django-insecure-d8h0lhyf5m26t%!tdp#_kvz!j5u#gt*4-u%$(vjysz&x4^+b5z
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# Email settings 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER
 
 # Redis settings
 REDIS_HOST = os.getenv("REDIS_HOST")
@@ -43,6 +54,17 @@ CELERY_TASK_ALWAYS_EAGER = False
 CELERY_TASK_EAGER_PROPAGATES = False  
 CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
 
+# Swagger
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Book API',
+    'DESCRIPTION': 'API для управления книгами',
+    'VERSION': '0.0.1',
+    'SERVE_INCLUDE_SCHEMA': False, 
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,9 +76,11 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django_celery_beat',
     'drf_spectacular',
+    'django_filters',
     'rest_framework',
     'commands',
-    'libary',
+    'library',
+    'celery',
 ]
 
 MIDDLEWARE = [
